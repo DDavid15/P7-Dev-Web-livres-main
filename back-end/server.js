@@ -36,9 +36,5 @@ const errorHandler = (error) => {
 // Événements du serveur
 server.on('error', errorHandler);
 
-server.on('listening', () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 // Démarrage du serveur
 server.listen(port);

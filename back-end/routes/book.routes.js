@@ -26,10 +26,6 @@ router.get('/', bookCtrl.getAllBooks);
 router.get('/bestrating', bookCtrl.getBestRatedBooks);
 router.get('/:id', bookCtrl.getOneBook);
 
-console.log('rateBook typeof:', typeof bookCtrl.rateBook);
-
-console.log('Routes /api/books chargées');
-
 // Routes sécurisées avec authentification
 router.post(
   '/',

@@ -34,14 +34,12 @@ exports.createBook = async (req, res, next) => {
 
 // GET /api/books
 exports.getAllBooks = async (req, res) => {
-  console.log('Requête reçue sur /api/books à', new Date().toISOString());
   try {
     const books = await Book.find();
 
     const formattedBooks = books.map(formatBook);
 
     res.status(200).json(formattedBooks);
-    console.log(books);
   } catch (error) {
     console.error('Erreur lors de la récupération des livres :', error.message);
     res.status(400).json({ error: error.message });

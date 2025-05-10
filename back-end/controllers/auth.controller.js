@@ -19,7 +19,6 @@ exports.signup = (req, res) => {
       user
         .save()
         .then(() => {
-          console.log(`Utilisateur ${email} créé avec succès`);
           res.status(201).json({ message: 'Utilisateur créé avec succès' });
         })
         .catch((error) => {
