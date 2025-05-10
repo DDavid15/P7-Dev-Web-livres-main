@@ -3,8 +3,33 @@ const fs = require('fs');
 const path = require('path');
 const formatBook = require('../utils/formatBook');
 
+// POST /api/books
 exports.createBook = async (req, res, next) => {
-  res.status(201).json({ message: 'CreateBook OK (exemple)' });
+  try {
+    // Récupère le contenu textuel du champ "book" (envoyé en JSON)
+    const bookObject = JSON.parse(req.body.book);
+
+    // Récupère le nom du fichier image uploadé
+    const filename = req.file.filename;
+
+    // Crée un nouveau livre basé sur le modèle Book
+    const book = new Book({
+      ...bookObject,
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${filename}`,
+      averageRating: bookObject.averageRating || 0, // optionnel
+      ratings: [],
+      userId: req.auth.userId, // sécurise en reliant l'utilisateur
+    });
+
+    // Sauvegarde le livre dans MongoDB
+    await book.save();
+
+    // répond que tout s'est bien passé
+    res.status(201).json({ message: 'Livre enregistré avec succès !' });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: error.message || 'Erreur lors de la création du livre' });
+  }
 };
 
 // GET /api/books
@@ -89,13 +114,7 @@ exports.deleteBook = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-/*
-// POST /api/books/:id
-exports.postBook = async (req, res, next) => {
-  
-  }
-};
-*/
+
 // POST /api/books/:id/rating
 exports.rateBook = async (req, res, next) => {
   const { userId, rating } = req.body;

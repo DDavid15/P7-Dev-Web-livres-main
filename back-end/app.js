@@ -29,7 +29,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Accès au dossier images
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images'), {
+  setHeaders: (res, path) => {
+    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+}));
 
 // Routes API
 app.use('/api/books', bookRoutes);
