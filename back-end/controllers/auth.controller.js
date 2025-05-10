@@ -71,7 +71,8 @@ exports.login = (req, res) => {
       res.status(500).json({ error: 'Erreur serveur' });
     });
 };
-/*
+
+/* Amélioration Future
 // Fonction pour mettre à jour le mot de passe (à utiliser en cas de changement de mot de passe)
 exports.updatePassword = (req, res) => {
   const { email, newPassword } = req.body;
