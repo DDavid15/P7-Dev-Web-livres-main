@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+
+# Env file
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Images générées
+/images/*
+
+# Sauf ce dossier lui-même (pour que Git le garde vide)
+!/images/.gitkeep
+
+# IDE config
+.vscode/
+.idea/
+
+# Build ou dist éventuel
+/dist/
+/build/
+
+# Cache npm
+.npm/
+
+# Cache Yarn
+.yarn/
