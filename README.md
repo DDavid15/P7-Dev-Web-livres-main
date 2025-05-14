@@ -81,9 +81,23 @@ cd ../front-end
 
 Pour lancer le frontend :
 
+⚡ Prérequis
+Le projet a été développé et testé sous Node.js version 19.
+
+❗️Attention : la version 22 de Node n'est pas compatible sans modifications.
+
+Pour garantir un fonctionnement correct, veuillez utiliser Node.js 19.
+
+Si besoin, voici comment repasser sur Node 19 avec nvm :
+
+```bash
+nvm install 19
+nvm use 19
+```
+(N'oubliez pas de vérifier votre version avec node -v.)
+
 Faites la commande `npm install` pour installer les dépendances puis `npm start` pour lancer le projet. 
 
-Le projet a été testé sur node 19. 
 
 ---
 
