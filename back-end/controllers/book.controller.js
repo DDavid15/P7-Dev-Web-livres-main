@@ -9,26 +9,31 @@ exports.createBook = async (req, res, next) => {
     // Récupère le contenu textuel du champ "book" (envoyé en JSON)
     const bookObject = JSON.parse(req.body.book);
 
-    // Récupère le nom du fichier image uploadé
-    const filename = req.file.filename;
+ // Récupère le nom du fichier image uploadé
+ const filename = req.file.filename;
 
-    // Crée un nouveau livre basé sur le modèle Book
-    const book = new Book({
-      ...bookObject,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${filename}`,
-      averageRating: bookObject.averageRating || 0, // optionnel
-      ratings: [],
-      userId: req.auth.userId, // sécurise en reliant l'utilisateur
-    });
+ const initialRating = Math.min(Math.max(bookObject.averageRating || 0, 0), 5);
 
-    // Sauvegarde le livre dans MongoDB
-    await book.save();
+ // Crée un nouveau livre basé sur le modèle Book
+ const book = new Book({
+   ...bookObject,
+   imageUrl: `${req.protocol}://${req.get('host')}/images/${filename}`,
+   userId: req.auth.userId,
+   ratings: [{
+     userId: req.auth.userId,
+     grade: initialRating,
+   }],
+   averageRating: initialRating,
+ });
 
-    // répond que tout s'est bien passé
-    res.status(201).json({ message: 'Livre enregistré avec succès !' });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: error.message || 'Erreur lors de la création du livre' });
+ // Sauvegarde le livre dans MongoDB
+ await book.save();
+
+ // répond que tout s'est bien passé
+ res.status(201).json(formatBook(book));
+} catch (error) {
+ console.error(error);
+ res.status(400).json({ error: error.message || 'Erreur lors de la création du livre' });
   }
 };
 
