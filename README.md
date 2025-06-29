@@ -42,11 +42,12 @@ Installer les dépendances :
 npm install
 ```
 
-Modifier le fichier `.env.example` en `.env` à la racine de `back-end/` et intégrez votre_URI_MongoDB et une Une_chaine_secrete_au_choix :
+Modifier le fichier `.env.example` en `.env` à la racine de `back-end/` et intégrez votre_URI_MongoDB, une Une_chaine_secrete_au_choix et l'URL de votre frontend :
 
 ```
 MONGO_URI=Votre_URI_MongoDB
 TOKEN_SECRET=Une_chaine_secrete_au_choix
+CLIENT_ORIGIN=https://your-frontend-domain
 ```
 
 Exemple :
@@ -54,6 +55,7 @@ Exemple :
 ```
 MONGO_URI=mongodb+srv://votre_user:votre_motdepasse@votre_cluster.mongodb.net/votre_db
 TOKEN_SECRET=MySuperSecretTokenKey123
+CLIENT_ORIGIN=https://your-frontend-domain
 ```
 
 Lancer le serveur Backend :

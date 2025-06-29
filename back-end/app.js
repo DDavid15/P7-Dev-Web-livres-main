@@ -16,9 +16,14 @@ db.connect();
 app.use(helmet());
 
 // Middleware CORS
+const allowedOrigins = ['https://p7-dev-web-livres-main.vercel.app/'];
+if (process.env.CLIENT_ORIGIN) {
+  allowedOrigins.push(process.env.CLIENT_ORIGIN);
+}
+
 app.use(
   cors({
-    origin: 'http://localhost:3000', // Frontend
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   }),
