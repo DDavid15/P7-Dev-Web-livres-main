@@ -26,7 +26,7 @@ function BookRatingForm({
     if (watchedRating) {
       setRating(parseInt(watchedRating, 10));
     }
-  }, [formState]);
+  }, [watchedRating]);
   const onSubmit = async () => {
     if (!connectedUser || !auth) {
       navigate(APP_ROUTES.SIGN_IN);

@@ -40,11 +40,10 @@ function SignIn({ setUser }) {
       }
     } catch (err) {
       console.log(err);
-      const message =
-        err.response?.data?.error
+      const message = err.response?.data?.error
         || err.response?.data?.errors?.[0]?.msg
         || err.message;
-      setNotification({ error: true, message })
+      setNotification({ error: true, message });
       console.log('Some error occured during signing in: ', err);
     } finally {
       setIsLoading(false);
@@ -68,8 +67,7 @@ function SignIn({ setUser }) {
       }
       setNotification({ error: false, message: 'Votre compte a bien été créé, vous pouvez vous connecter' });
     } catch (err) {
-      const message =
-        err.response?.data?.error
+      const message = err.response?.data?.error
         || err.response?.data?.errors?.[0]?.msg
         || err.message;
       setNotification({ error: true, message });
