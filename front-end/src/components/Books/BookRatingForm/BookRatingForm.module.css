@@ -42,6 +42,11 @@
     margin-bottom: 22px;
 }
 
+.Notification {
+  margin-top: 15px;
+  color: #D70000;
+}
+
 @media all and (max-width: 600px) {
 
 }

@@ -1,5 +1,5 @@
 import * as PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styles from './BookRatingForm.module.css';
@@ -13,17 +13,18 @@ function BookRatingForm({
 }) {
   const { connectedUser, auth } = useUser();
   const navigate = useNavigate();
-  const { register, formState, handleSubmit } = useForm({
+  const { register, watch, handleSubmit } = useForm({
     mode: 'onChange',
     defaultValues: {
       rating: 0,
     },
   });
+  const [notification, setNotification] = useState('');
+
+  const watchedRating = watch('rating');
   useEffect(() => {
-    if (formState.dirtyFields.rating) {
-      const rate = document.querySelector('input[name="rating"]:checked').value;
-      setRating(parseInt(rate, 10));
-      formState.dirtyFields.rating = false;
+    if (watchedRating) {
+      setRating(parseInt(watchedRating, 10));
     }
   }, [formState]);
   const onSubmit = async () => {
@@ -31,12 +32,11 @@ function BookRatingForm({
       navigate(APP_ROUTES.SIGN_IN);
     }
     const update = await rateBook(id, userId, rating);
-    console.log(update);
     if (update) {
       // eslint-disable-next-line no-underscore-dangle
       setBook({ ...update, id: update._id });
     } else {
-      alert(update);
+      setNotification('Une erreur est survenue');
     }
   };
   return (
@@ -48,6 +48,7 @@ function BookRatingForm({
         </div>
         {!userRated ? <button type="submit">Valider</button> : null}
       </form>
+      {notification && <p className={styles.Notification}>{notification}</p>}
     </div>
   );
 }

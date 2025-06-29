@@ -42,13 +42,26 @@ Installer les dépendances :
 npm install
 ```
 
-Modifier le fichier `.env.example` en `.env` à la racine de `back-end/` et intégrez votre_URI_MongoDB, une Une_chaine_secrete_au_choix et l'URL de votre frontend :
+Modifier le fichier `.env.example` en `.env` à la racine de `back-end/` et intégrez votre_URI_MongoDB, une Une_chaine_secrete_au_choix, l'URL de votre frontend et vos identifiants Cloudinary :
 
 ```
 MONGO_URI=Votre_URI_MongoDB
 TOKEN_SECRET=Une_chaine_secrete_au_choix
 CLIENT_ORIGIN=https://your-frontend-domain
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
+### Configuration Cloudinary
+
+La gestion des images utilise [Cloudinary](https://cloudinary.com). Trois variables doivent 
+être renseignées dans votre fichier `.env` :
+
+- `CLOUDINARY_CLOUD_NAME` : le nom de votre espace Cloudinary.
+- `CLOUDINARY_API_KEY` : la clé API permettant l'accès aux ressources.
+- `CLOUDINARY_API_SECRET` : la clé secrète liée à votre clé API.
+
+Vous pouvez prendre exemple sur le fichier `back-end/.env.example` pour remplir ces valeurs.
 
 Exemple :
 
@@ -56,6 +69,9 @@ Exemple :
 MONGO_URI=mongodb+srv://votre_user:votre_motdepasse@votre_cluster.mongodb.net/votre_db
 TOKEN_SECRET=MySuperSecretTokenKey123
 CLIENT_ORIGIN=https://your-frontend-domain
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
 
 Lancer le serveur Backend :
@@ -98,8 +114,13 @@ nvm use 19
 ```
 (N'oubliez pas de vérifier votre version avec node -v.)
 
-Faites la commande `npm install` pour installer les dépendances puis `npm start` pour lancer le projet. 
+Faites la commande `npm install` pour installer les dépendances puis `npm start` pour lancer le projet.
 
+### Images bloquées par AdBlock ?
+Certaines extensions de blocage de publicité peuvent empêcher l'affichage des images.
+Si les couvertures ne se chargent pas dans l'interface, essayez de désactiver
+votre bloqueur de publicités ou d'ajouter le site local (par exemple
+`http://localhost:3000`) à la liste blanche pendant le développement.
 
 ---
 

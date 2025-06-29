@@ -17,7 +17,7 @@ function AddBook() {
         navigate(APP_ROUTES.SIGN_IN);
       }
     }
-  }, [userLoading]);
+  }, [userLoading, connectedUser, auth]);
 
   return (
     <div className="content-container">

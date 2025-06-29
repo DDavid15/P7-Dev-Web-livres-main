@@ -13,10 +13,11 @@ function BookForm({ book, validate }) {
   const userRating = book ? book.ratings.find((elt) => elt.userId === localStorage.getItem('userId'))?.grade : 0;
 
   const [rating, setRating] = useState(0);
+  const [notification, setNotification] = useState('');
 
   const navigate = useNavigate();
   const {
-    register, watch, formState, handleSubmit, reset,
+    register, watch, handleSubmit, reset,
   } = useForm({
     defaultValues: useMemo(() => ({
       title: book?.title,
@@ -35,19 +36,19 @@ function BookForm({ book, validate }) {
     setRating(userRating);
   }, [userRating]);
 
+  const watchedRating = watch('rating');
+
   useEffect(() => {
-    if (!book && formState.dirtyFields.rating) {
-      const rate = document.querySelector('input[name="rating"]:checked').value;
-      setRating(parseInt(rate, 10));
-      formState.dirtyFields.rating = false;
+    if (!book && watchedRating) {
+      setRating(parseInt(watchedRating, 10));
     }
-  }, [formState]);
+  }, [watchedRating, book]);
 
   const onSubmit = async (data) => {
     // When we create a new book
     if (!book) {
       if (!data.file[0]) {
-        alert('Vous devez ajouter une image');
+        setNotification('Vous devez ajouter une image');
       }
       if (!data.rating) {
         /* eslint-disable no-param-reassign */
@@ -58,14 +59,14 @@ function BookForm({ book, validate }) {
       if (!newBook.error) {
         validate(true);
       } else {
-        alert(newBook.message);
+        setNotification(newBook.message);
       }
     } else {
       const updatedBook = await updateBook(data, data.id);
       if (!updatedBook.error) {
         navigate('/');
       } else {
-        alert(updatedBook.message);
+        setNotification(updatedBook.message);
       }
     }
   };
@@ -115,6 +116,7 @@ function BookForm({ book, validate }) {
         <input {...register('file')} type="file" id="file" />
       </label>
       <button type="submit">Publier</button>
+      {notification && <p className={styles.Notification}>{notification}</p>}
     </form>
   );
 }
