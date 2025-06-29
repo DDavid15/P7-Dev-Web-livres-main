@@ -1,7 +1,13 @@
 const Book = require('../models/book');
-const fs = require('fs');
-const path = require('path');
+const cloudinary = require('../config/cloudinary');
 const formatBook = require('../utils/formatBook');
+
+const getPublicId = (url) => {
+  const parts = url.split('/');
+  const folder = parts[parts.length - 2];
+  const file = parts[parts.length - 1].split('.')[0];
+  return `${folder}/${file}`;
+};
 
 // POST /api/books
 exports.createBook = async (req, res, next) => {
@@ -9,22 +15,20 @@ exports.createBook = async (req, res, next) => {
     // Récupère le contenu textuel du champ "book" (envoyé en JSON)
     const bookObject = JSON.parse(req.body.book);
 
- // Récupère le nom du fichier image uploadé
- const filename = req.file.filename;
+    const initialRating = Math.min(Math.max(bookObject.averageRating || 0, 0), 5);
 
- const initialRating = Math.min(Math.max(bookObject.averageRating || 0, 0), 5);
-
- // Crée un nouveau livre basé sur le modèle Book
- const book = new Book({
-   ...bookObject,
-   imageUrl: `${req.protocol}://${req.get('host')}/images/${filename}`,
-   userId: req.auth.userId,
-   ratings: [{
-     userId: req.auth.userId,
-     grade: initialRating,
-   }],
-   averageRating: initialRating,
- });
+    const book = new Book({
+      ...bookObject,
+      imageUrl: req.file.path,
+      userId: req.auth.userId,
+      ratings: [
+        {
+          userId: req.auth.userId,
+          grade: initialRating,
+        },
+      ],
+      averageRating: initialRating,
+    });
 
  // Sauvegarde le livre dans MongoDB
  await book.save();
@@ -75,23 +79,19 @@ exports.updateBook = async (req, res) => {
     const updatedBook = req.file
       ? {
           ...JSON.parse(req.body.book),
-          imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+          imageUrl: req.file.path,
         }
       : req.body;
 
     if (req.file && book.imageUrl) {
-      const oldFilename = book.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${oldFilename}`, async () => {
-        await Book.findByIdAndUpdate(req.params.id, updatedBook, { new: true });
-        res.status(200).json({ message: 'Livre modifié avec image !' });
-      });
-    } else {
+      const publicId = getPublicId(book.imageUrl);
+      await cloudinary.uploader.destroy(publicId);
+    }
       await Book.findByIdAndUpdate(req.params.id, updatedBook, { new: true });
       res.status(200).json({ message: 'Livre modifié !' });
-    }
-  } catch (error) {
-    console.error('❌ Erreur lors de la modification :', error.message);
-    res.status(500).json({ error: error.message });
+    } catch (error) {
+      console.error('❌ Erreur lors de la modification :', error.message);
+      res.status(500).json({ error: error.message });
   }
 };
 
@@ -103,14 +103,14 @@ exports.deleteBook = async (req, res) => {
     if (book.userId !== req.auth.userId)
       return res.status(403).json({ error: 'Requête non autorisée' });
 
-    const filename = book.imageUrl.split('/images/')[1];
+    const publicId = getPublicId(book.imageUrl);
     try {
-      await fs.promises.unlink(`images/${filename}`);
+      await cloudinary.uploader.destroy(publicId);
       await Book.findByIdAndDelete(req.params.id);
       res.status(200).json({ message: 'Livre supprimé !' });
     } catch (error) {
-      console.error("❌ Erreur lors de la suppression de l'image :", error.message);
-      res.status(500).json({ error: 'Erreur lors de la suppression du fichier image' });
+      console.error('❌ Erreur lors de la suppression de l\'image :', error.message);
+      res.status(500).json({ error: "Erreur lors de la suppression de l'image" });
     }
   } catch (error) {
     console.error('❌ Erreur lors de la suppression :', error.message);

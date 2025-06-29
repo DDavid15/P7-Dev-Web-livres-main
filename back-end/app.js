@@ -16,9 +16,9 @@ db.connect();
 app.use(helmet());
 
 // Middleware CORS
-const allowedOrigins = ['https://p7-dev-web-livres-main.vercel.app/'];
+const allowedOrigins = ['https://p7-dev-web-livres-main.vercel.app'];
 if (process.env.CLIENT_ORIGIN) {
-  allowedOrigins.push(process.env.CLIENT_ORIGIN);
+  allowedOrigins.push(process.env.CLIENT_ORIGIN.replace(/\/$/, ''));
 }
 
 app.use(
