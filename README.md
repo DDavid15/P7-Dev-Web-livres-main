@@ -161,7 +161,6 @@ Les tests fonctionnels de l'API ont été réalisés avec Postman :
 ## 👨‍💻 Auteur
 
 David DURIBREUX
-[duribreuxdavid15@gmail.com](mailto:duribreuxdavid15@gmail.com)
 [GitHub - DDavid15](https://github.com/DDavid15)
 
 ---
